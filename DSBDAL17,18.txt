@@ -1,0 +1,22 @@
+/** map */
+
+
+import org.apache.spark.SparkContext 
+
+//al conf = new SparkConf().setAppName("WordCount").setMaster("local") 
+val sc = new SparkContext() 
+var map = sc.textFile("input.txt").flatMap(line => line.split(" ")).map(word =>(word,1))
+println(map)
+
+/** reduce */
+var counts = map.reduceByKey(_ + _)
+var valu=counts.values
+counts.count /*Gives couts in file*/
+counts.collect /*gives list of elements in counts*/
+val keysRdd = counts.keys
+val sorted = keysRdd.sortBy(x =>x, true)
+sorted.collect
+val m=counts.max
+/** save the output to file */
+counts.saveAsTextFile("WD_fri")
+sorted.saveAsTextFile("sort_fri")
